@@ -6,48 +6,108 @@
 
 using namespace std;
 
+char to_lower(char c) {
+  return tolower(c);
+}
+
+char to_upper(char c) {
+  return toupper(c);
+}
+
+int findPos(string word, vector<string>& a, int begin, int end) {    //ç”¨äºŒåˆ†æ³•æŸ¥æ‰¾ä½ç½®ï¼Œå¼€å§‹æŸ¥æ‰¾ä½ç½®ï¼Œç»“æŸæŸ¥æ‰¾ä½ç½®
+  if (begin == end) {
+    if (word == a[begin]) {
+      return -1;
+    } else if (word > a[begin]) {
+      return end + 1;
+    } else {
+      return begin;
+    }
+  }
+  if (end - begin == 1) {
+    if (word == a[begin]) {   //wordåœ¨æ­¤ä½ç½®å‰
+      return -1;           //å•è¯é‡å¤
+    } else if (word == a[end]) {
+      return -1;           //å•è¯é‡å¤
+    } else if (word < a[begin]) {
+      return begin;
+    } else if (word > a[end]) {
+      return end + 1;
+    } else {
+      return end;
+    }
+  } else {
+    int m = (begin + end) / 2;
+    if (word == a[m]) {
+      return -1;          //å•è¯é‡å¤
+    } else if (word < a[m]) {
+      return findPos(word, a, begin, m);
+    } else {
+      return findPos(word, a, m, end);
+    }
+  }
+  cout << "error in function findPos: " << word << " " << begin << "  " << end << endl;    //æŠ¥é”™
+  return -2;
+}
+
 int main(int argc, char* argv[]) {
   fstream inFile;
-  string fileName = argv[argc - 1];  //´ò¿ªÎÄ¼şÃû
+  string fileName = argv[argc - 1];  //æ‰“å¼€æ–‡ä»¶å
   inFile.open(fileName, ios::in);
-  if (!inFile.is_open()) {  //ÅĞ¶ÏÎÄ¼şÊÇ·ñ³É¹¦´ò¿ª
+  if (!inFile.is_open()) {  //åˆ¤æ–­æ–‡ä»¶æ˜¯å¦æˆåŠŸæ‰“å¼€
     cout << "Can't find the file!" << endl;
     return 1;
   }
-  vector<string> wordsList;     //´æ´¢µ¥´Ê
-  vector<string> lowWordsList;  //Ğ¡Ğ´µ¥´Ê
-  string line;                  //´ËĞĞµÄ×Ö·û´®
-  string word;                  //µ¥´Ê½ØÈ¡
-  int pos = 0;                  //¼ÇÂ¼Î»ÖÃ
-  while (!inFile.eof()) {       //Ö±µ½ÎÄ¼şÄ©Î²
-    getline(inFile, line);      //µÃµ½Ò»ĞĞµ¥´Ê
+  vector<string> lowWordsList;  //å°å†™å•è¯
+  string line;                  //æ­¤è¡Œçš„å­—ç¬¦ä¸²
+  string word;                  //å•è¯æˆªå–
+  int pos = 0;                  //è®°å½•ä½ç½®
+  while (!inFile.eof()) {       //ç›´åˆ°æ–‡ä»¶æœ«å°¾
+    getline(inFile, line);      //å¾—åˆ°ä¸€è¡Œå•è¯
     pos = 0;
-    while (pos < line.length()) {   //ÕâÀïlengthºÍsizeÓ¦¸Ã¶¼¿É
-      word = "";                    //ÖØÖÃword
-      if (isalpha(line.at(pos))) {  //ÕâÀïline[pos]ºÍline.at(pos)Ó¦¸ÃµÈ¼Û
+    while (pos < line.length()) {   //è¿™é‡Œlengthå’Œsizeåº”è¯¥éƒ½å¯
+      word = "";                    //é‡ç½®word
+      if (isalpha(line.at(pos))) {  //è¿™é‡Œline[pos]å’Œline.at(pos)åº”è¯¥ç­‰ä»·
         while (isalpha(line.at(pos))) {
           word += line.at(pos);
           pos++;
-          if (pos < line.length())  //ÅĞ¶ÏÊÇ·ñÔ½½ç£¬±ÜÃâ±¨´í
+          if (pos < line.length())  //åˆ¤æ–­æ˜¯å¦è¶Šç•Œï¼Œé¿å…æŠ¥é”™
             continue;
           else
             break;
         }
-        if (word.length() <= 1) {  //Ò»¸ö×ÖÄ¸¾ÍÌø¹ı
+        if (word.length() <= 1) {  //ä¸€ä¸ªå­—æ¯å°±è·³è¿‡
           // cout << "a letter can't be a word!" << endl;
           continue;
         }
-        wordsList.push_back(word);  //½«µ¥´Ê¼Óµ½wordsListºóÃæ
-        transform(word.begin(), word.end(), word.begin(), tolower);
-        lowWordsList.push_back(word);  //Ğ¡Ğ´×ÖÄ¸
-      } else {                         //²»ÂÛÊÇ·ñÊÇ×ÖÄ¸£¬¶¼µÃpos++
+        
+        transform(word.begin(), word.end(), word.begin(), to_lower);  //å˜æˆå°å†™
+        //cout << word << "------------" << endl;
+        if (lowWordsList.size() == 0) {
+          lowWordsList.push_back(word);
+          continue;
+        }
+        int index = findPos(word, lowWordsList, 0, lowWordsList.size() - 1);
+        //cout << index << "\n" << endl;
+        if (index < 0) {
+          continue;
+        }
+        else if (index >= lowWordsList.size()) {
+          lowWordsList.push_back(word);  //å°å†™å­—æ¯ï¼Œç›´æ¥åŠ åˆ°æœ€å
+        }
+        else {
+          lowWordsList.insert(lowWordsList.begin() + index, word);  //å°å†™å­—æ¯ï¼Œæ’å…¥
+        }
+      } else {                         //ä¸è®ºæ˜¯å¦æ˜¯å­—æ¯ï¼Œéƒ½å¾—pos++
         pos++;
       }
     }
   }
   inFile.close();
-  for (pos = 0; pos < wordsList.size(); pos++) {
-    cout << wordsList[pos] << " " << lowWordsList[pos] << endl;
+  pos = 0;
+  while (pos < lowWordsList.size()) {
+    cout << lowWordsList[pos] << endl;
+    pos++;
   }
   return 0;
 }
