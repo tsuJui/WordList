@@ -76,7 +76,70 @@ void countWordList(vector<string>& list, string word,
 
 int main(int argc, char* argv[]) {
   fstream inFile;
-  string fileName = argv[argc - 1];  //打开文件名
+  ofstream outFile("solution.txt");
+  string fileName;  //打开文件名
+  int para_n = 0;   //1代表传入该类型参数
+  int para_w = 0;
+  int para_m = 0;
+  int para_c = 0;
+  int para_h = 0;
+  string h_sub;
+  int para_t = 0;
+  string t_sub;
+  int para_r = 0;
+  for (int i = 0; i < argc; i++) {
+    string str = argv[i];
+    if (str == "-n") {
+      if (para_n == 1) {
+        cout << "Duplicate Parameter Error!" << endl;
+        return 1;
+      }
+      para_n = 1; 
+    } else if (str == "-w") {
+      if (para_w == 1) {
+        cout << "Duplicate Parameter Error!" << endl;
+        return 1;
+      }
+      para_w = 1;
+    } else if (str == "-m") {
+      if (para_m == 1) {
+        cout << "Duplicate Parameter Error!" << endl;
+        return 1;
+      }
+      para_m = 1;
+    } else if (str == "-c") {
+      if (para_c == 1) {
+        cout << "Duplicate Parameter Error!" << endl;
+        return 1;
+      }
+      para_c = 1;
+    } else if (str == "-h") {
+      if (para_h == 1) {
+        cout << "Duplicate Parameter Error!" << endl;
+        return 1;
+      }
+      h_sub = argv[++i];
+      para_h = 1;
+    } else if (str == "-t") {
+      if (para_t == 1) {
+        cout << "Duplicate Parameter Error!" << endl;
+        return 1;
+      }
+      t_sub = argv[++i];
+      para_t = 1;
+    } else if (str == "-r") {
+      if (para_r == 1) {
+        cout << "Duplicate Parameter Error!" << endl;
+        return 1;
+      }
+      para_r = 1;
+    }
+    if (str.length() >= 4) {
+      if (str.substr(str.length() - 4) == ".txt") {
+        fileName = str;
+      }
+    }
+  }
   inFile.open(fileName, ios::in);
   if (!inFile.is_open()) {  //判断文件是否成功打开
     cout << "Can't find the file!" << endl;
@@ -138,26 +201,37 @@ int main(int argc, char* argv[]) {
     ordered[lowWordsList[pos].front() - 'a'].push_back(lowWordsList[pos]);
     pos++;
   }
-  int sum = 0;
   vector<string> output; //用于输出所有不含环单词链
+  int sum = 0;
   for (int i = 0; i < lowWordsList.size(); i++) { //分割最长单词链
     vector<string> list;
     list.push_back(lowWordsList[i]);
     countWordList(list, lowWordsList[i], ordered);
     if (list.size() >= 2) {
+      if (para_h == 1 && list[0].front() == h_sub.at(0)) {
+        continue;
+      }
       string str = list[0] + " ";
       for (int j = 1; j < list.size(); j++) {
         str = str + list[j] + " ";
-      }
-      if (!contains(output, str)) {
-        output.push_back(str);
+        if (j == list.size() - 1 && para_t == 1 &&
+            list[j].back() == t_sub.at(0)) {
+          continue;
+        }
+        if (!contains(output, str)) {
+          output.push_back(str);
+        }
         sum++;
       }
     }
   }
-  cout << sum << endl;
-  for (int j = 1; j < output.size(); j++) {
-    cout << output[j] << endl;
+  if (para_n == 1) {
+    outFile << sum << endl;
   }
+  for (int j = 0; j < output.size(); j++) {
+    output[j].erase(output[j].end() - 1);
+    outFile << output[j] << endl;
+  }
+  outFile.close();
   return 0;
 }
