@@ -6,6 +6,17 @@
 
 using namespace std;
 
+int para_n = 0;  // 1代表传入该类型参数
+int para_w = 0;
+int para_m = 0;
+int para_c = 0;
+int para_h = 0;
+string h_sub;
+int para_t = 0;
+string t_sub;
+int para_r = 0;
+int ring_warn = 0;
+
 char to_lower(char c) {
   return tolower(c);
 }
@@ -62,10 +73,16 @@ bool contains(vector<string>& list, string word) {
 void countWordList(vector<string>& list, string word,
                              vector<vector<string>>& ordered) { //得到最长单词链
   int k = word.back() - 'a';
+  if (ring_warn == 1) {
+    return;
+  }
   for (int i = 0; i < ordered[k].size(); i++) {
     if (!contains(list, ordered[k][i])) {
-      if (ordered[k][i].back() == list[0].front()) {
-        return;
+      if (para_r != 1) {
+        if (ordered[k][i].back() == list[0].front()) {
+          ring_warn = 1;
+          return;
+        }
       }
       list.push_back(ordered[k][i]);
       countWordList(list, list.back(), ordered);
@@ -78,15 +95,6 @@ int main(int argc, char* argv[]) {
   fstream inFile;
   ofstream outFile("solution.txt");
   string fileName;  //打开文件名
-  int para_n = 0;   //1代表传入该类型参数
-  int para_w = 0;
-  int para_m = 0;
-  int para_c = 0;
-  int para_h = 0;
-  string h_sub;
-  int para_t = 0;
-  string t_sub;
-  int para_r = 0;
   for (int i = 0; i < argc; i++) {
     string str = argv[i];
     if (str == "-n") {
@@ -139,6 +147,9 @@ int main(int argc, char* argv[]) {
         fileName = str;
       }
     }
+  }
+  if (para_n + para_m + para_w + para_c > 1) {
+    cout << "Parameter Error!" << endl;
   }
   inFile.open(fileName, ios::in);
   if (!inFile.is_open()) {  //判断文件是否成功打开
@@ -207,6 +218,10 @@ int main(int argc, char* argv[]) {
     vector<string> list;
     list.push_back(lowWordsList[i]);
     countWordList(list, lowWordsList[i], ordered);
+    if (ring_warn == 1) {
+      cout << "Contains Words Ring!" << endl; 
+      return 1;
+    }
     if (list.size() >= 2) {
       if (para_h == 1 && list[0].front() == h_sub.at(0)) {
         continue;
@@ -226,8 +241,13 @@ int main(int argc, char* argv[]) {
     }
   }
   if (para_n == 1) {
-    outFile << sum << endl;
-  }
+    cout << sum << endl;
+    for (int j = 0; j < output.size(); j++) {
+      output[j].erase(output[j].end() - 1);
+      cout << output[j] << endl;
+    }
+    return 0;
+  } 
   for (int j = 0; j < output.size(); j++) {
     output[j].erase(output[j].end() - 1);
     outFile << output[j] << endl;
