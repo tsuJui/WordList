@@ -24,7 +24,143 @@ char to_lower(char c) {
 char to_upper(char c) {
   return toupper(c);
 }
+vector<string> getWords(string line) {
+  vector<string> wordsList;
+  int pos = 0;
+  string word = "";
+  while (pos < line.length()) {   //这里length和size应该都可
+    word = "";                    //重置word
+    if (isalpha(line.at(pos))) {  //这里line[pos]和line.at(pos)应该等价
+      while (isalpha(line.at(pos))) {
+        word += line.at(pos);
+        pos++;
+        if (pos < line.length())  //判断是否越界，避免报错
+          continue;
+        else
+          break;
+      }
+      wordsList.push_back(word);
+    } else {
+      pos++;
+    }
+  }
+  return wordsList;
+}
 
+vector<string> paraW(vector<string>& output) {  //输出一个包含单词最多的单词链
+  string tmp = "";
+  int count1 = 0;  //记录单词数量
+  int count2 = 0;  //记录单词数量
+  int i = 0;
+  int j = 0;
+  if (output.size() < 0) {  //防止output为空
+    cout << "there is no wordList!" << endl;
+    return getWords(tmp);
+  }
+  while (i < output.size()) {
+    count2 = 0;
+    j = 0;
+    while (j < output[i].length()) {
+      if (isalpha(output[i].at(j))) {  //[]和at()一致
+        while (isalpha(output[i].at(j))) {
+          j++;
+          if (j < output[i].length())  //判断是否越界，避免报错
+            continue;
+          else
+            break;
+        }
+        count2++;
+      } else {
+        j++;
+      }
+    }
+    if (count2 > count1) {
+      count1 = count2;
+      tmp = output[i];
+    }
+    i++;
+  }
+  return getWords(tmp);
+}
+
+vector<string> paraM(
+    vector<string>& output) {  //计算首字母不相同的含最多单词的单词链
+  string tmp = "";
+  int mark[26] = {0};  //标记首字母是否出现过
+  int strMark = 0;     //标记该单词链是否满足要求
+  int count1 = 0;      //记录单词数量
+  int count2 = 0;      //记录单词数量
+  int i = 0;
+  int j = 0;
+  if (output.size() <= 0) {  //防止output为空
+    cout << "there is no wordList!" << endl;
+    return getWords(tmp);
+  }
+  while (i < output.size()) {
+    count2 = 0;
+    strMark = 0;                //重置strMark
+    for (j = 0; j < 26; j++) {  //重置mark
+      mark[j] = 0;
+    }
+    j = 0;
+    while (j < output[i].length()) {
+      if (isalpha(output[i].at(j))) {  //[]和at()一致
+        if (mark[output[i].at(j) - 'a'] == 1) {
+          strMark = 1;
+          break;
+        } else {
+          mark[output[i].at(j) - 'a'] = 1;
+        }
+        while (isalpha(output[i].at(j))) {
+          j++;
+          if (j < output[i].length())  //判断是否越界，避免报错
+            continue;
+          else
+            break;
+        }
+        count2++;
+      } else {
+        j++;
+      }
+    }
+    if (count2 > count1 && strMark == 0) {
+      count1 = count2;
+      tmp = output[i];
+    }
+    i++;
+  }
+  return getWords(tmp);
+}
+
+vector<string> paraC(vector<string>& output) {  //输出单词字母数量最多的单词链
+  string tmp = "";
+  int count1 = 0;  //记录字母数量
+  int count2 = 0;  //记录字母数量
+  int i = 0;
+  int j = 0;
+  if (output.size() < 0) {  //防止output为空
+    cout << "there is no wordList!" << endl;
+    return getWords(tmp);
+  }
+  while (i < output.size()) {
+    count2 = 0;
+    j = 0;
+    while (j < output[i].length()) {
+      if (isalpha(output[i].at(j))) {  //[]和at()一致
+        j++;
+        count2++;
+      } else {
+        j++;
+      }
+    }
+    if (count2 > count1) {
+      count1 = count2;
+      tmp = output[i];
+    }
+    i++;
+  }
+  return getWords(tmp);
+}
 int findPos(string word, vector<string>& a, int begin, int end) {    //用二分法查找位置，开始查找位置，结束查找位置
   if (begin == end) {
     if (word == a[begin]) {
@@ -93,7 +229,6 @@ void countWordList(vector<string>& list, string word,
 
 int main(int argc, char* argv[]) {
   fstream inFile;
-  ofstream outFile("solution.txt");
   string fileName;  //打开文件名
   for (int i = 0; i < argc; i++) {
     string str = argv[i];
@@ -247,11 +382,33 @@ int main(int argc, char* argv[]) {
       cout << output[j] << endl;
     }
     return 0;
-  } 
-  for (int j = 0; j < output.size(); j++) {
-    output[j].erase(output[j].end() - 1);
-    outFile << output[j] << endl;
   }
-  outFile.close();
+  if (para_m == 1) {
+    vector<string> out = paraM(output);
+    ofstream outFile("solution.txt");
+    for (int j = 0; j < out.size(); j++) {
+      outFile << out[j] << endl;
+    }
+    outFile.close();
+    return 0;
+  }
+  if (para_w == 1) {
+    vector<string> out = paraW(output);
+    ofstream outFile("solution.txt");
+    for (int j = 0; j < out.size(); j++) {
+      outFile << out[j] << endl;
+    }
+    outFile.close();
+    return 0;
+  }
+  if (para_c == 1) {
+    vector<string> out = paraC(output);
+    ofstream outFile("solution.txt");
+    for (int j = 0; j < out.size(); j++) {
+      outFile << out[j] << endl;
+    }
+    outFile.close();
+    return 0;
+  }
   return 0;
 }
