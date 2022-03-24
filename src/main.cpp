@@ -50,6 +50,30 @@ int findPos(string word, vector<string>& a, int begin, int end) {    //用二分
   return -2;
 }
 
+bool contains(vector<string>& list, string word) {
+  for (int i = 0; i < list.size(); i++) {
+    if (list[i] == word) {
+      return true;
+    }
+  }
+  return false;
+}
+
+void countWordList(vector<string>& list, string word,
+                             vector<vector<string>>& ordered) { //得到最长单词链
+  int k = word.back() - 'a';
+  for (int i = 0; i < ordered[k].size(); i++) {
+    if (!contains(list, ordered[k][i])) {
+      if (ordered[k][i].back() == list[0].front()) {
+        return;
+      }
+      list.push_back(ordered[k][i]);
+      countWordList(list, list.back(), ordered);
+      return;
+    }
+  }
+}
+
 int main(int argc, char* argv[]) {
   fstream inFile;
   string fileName = argv[argc - 1];  //打开文件名
@@ -105,9 +129,35 @@ int main(int argc, char* argv[]) {
   }
   inFile.close();
   pos = 0;
+  vector<vector<string>> ordered;//26个vector用于存放不同字母开头的单词
+  for (int i = 0; i < 26; i++) {
+    vector<string> tmp;
+    ordered.push_back(tmp);
+  }
   while (pos < lowWordsList.size()) {
-    cout << lowWordsList[pos] << endl;
+    ordered[lowWordsList[pos].front() - 'a'].push_back(lowWordsList[pos]);
     pos++;
+  }
+  int sum = 0;
+  vector<string> output; //用于输出所有不含环单词链
+  for (int i = 0; i < lowWordsList.size(); i++) { //分割最长单词链
+    vector<string> list;
+    list.push_back(lowWordsList[i]);
+    countWordList(list, lowWordsList[i], ordered);
+    if (list.size() >= 2) {
+      string str = list[0] + " ";
+      for (int j = 1; j < list.size(); j++) {
+        str = str + list[j] + " ";
+      }
+      if (!contains(output, str)) {
+        output.push_back(str);
+        sum++;
+      }
+    }
+  }
+  cout << sum << endl;
+  for (int j = 1; j < output.size(); j++) {
+    cout << output[j] << endl;
   }
   return 0;
 }
