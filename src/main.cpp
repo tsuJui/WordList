@@ -261,14 +261,40 @@ int main(int argc, char* argv[]) {
         cout << "Duplicate Parameter Error!" << endl;
         return 1;
       }
-      h_sub = argv[++i];
+      if (i < argc - 1) {
+        h_sub = argv[++i];
+      } else {
+        cout << "Haed Letter Wrong!" << endl;
+        return 1;
+      }
+      if (h_sub.length() > 1) {
+        cout << "Haed Letter Too Long!" << endl;
+        return 1;
+      }
+      if (h_sub.at(0) < 'a' || h_sub.at(0) > 'z') {
+        cout << "Haed Letter Wrong!" << endl;
+        return 1;
+      }
       para_h = 1;
     } else if (str == "-t") {
       if (para_t == 1) {
         cout << "Duplicate Parameter Error!" << endl;
         return 1;
       }
-      t_sub = argv[++i];
+      if (i < argc - 1) {
+        t_sub = argv[++i];
+      } else {
+        cout << "Tail Letter Wrong!" << endl;
+        return 1;
+      }
+      if (t_sub.length() > 1) {
+        cout << "Tail Letter Too Long!" << endl;
+        return 1;
+      }
+      if (t_sub.at(0) < 'a' || t_sub.at(0) > 'z') {
+        cout << "Tail Letter Wrong!" << endl;
+        return 1;
+      }
       para_t = 1;
     } else if (str == "-r") {
       if (para_r == 1) {
@@ -276,11 +302,20 @@ int main(int argc, char* argv[]) {
         return 1;
       }
       para_r = 1;
-    }
-    if (str.length() >= 4) {
+    } else if (str.length() >= 4) {
       if (str.substr(str.length() - 4) == ".txt") {
+        if (fileName != "") {
+          cout << "Multiple Files Error!" << endl;
+          return 1;
+        }
         fileName = str;
+      } else {
+        cout << "Unrecognizable Information Error!" << endl;
+        return 1;
       }
+    } else {
+      cout << "Unrecognizable Parameter Error!" << endl;
+      return 1;
     }
   }
   if (fileName == "") {
