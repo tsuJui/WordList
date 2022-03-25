@@ -229,7 +229,7 @@ void countWordList(vector<string>& list, string word,
 
 int main(int argc, char* argv[]) {
   fstream inFile;
-  string fileName;  //打开文件名
+  string fileName = "";  //打开文件名
   for (int i = 0; i < argc; i++) {
     string str = argv[i];
     if (str == "-n") {
@@ -283,8 +283,17 @@ int main(int argc, char* argv[]) {
       }
     }
   }
+  if (fileName == "") {
+    cout << "No File Error!" << endl;
+    return 1;
+  }
+  if (para_n + para_m + para_w + para_c == 0) {
+    cout << "No Parameter Error!" << endl;
+    return 1;
+  }
   if (para_n + para_m + para_w + para_c > 1) {
-    cout << "Parameter Error!" << endl;
+    cout << "Conflict Parameters Error!" << endl;
+    return 1;
   }
   inFile.open(fileName, ios::in);
   if (!inFile.is_open()) {  //判断文件是否成功打开
