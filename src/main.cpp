@@ -1,8 +1,12 @@
-#include <algorithm>
+﻿#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <vector>
+#include <stdlib.h>
+#include <Windows.h>
+
+#define _CRT_SECURE_NO_WARNINGS
 
 using namespace std;
 
@@ -17,149 +21,114 @@ string t_sub;
 int para_r = 0;
 int ring_warn = 0;
 
+int output(char* result[], int paraN, int paraM, int paraW, int paraC) {
+  int count = 0;  //记录要求的值的数量，比如单词数量或者字母数量或者单词链数量
+  int sumCount = 0;  //记录result数组使用长度
+  int i = 0;
+
+  if (paraN == 1) {  //输出到控制台的情况
+    count = 0;
+    sumCount = 0;
+    while (result[sumCount][0] != '\0') {
+      sumCount++;
+      count++;
+    }
+    if (sumCount > 20000) {
+      cout << "the number of wordlists is too big, over 20000" << endl;
+      return count;
+    } else {
+      sumCount = 0;
+      cout << count << endl;
+      while (sumCount < count) {
+        cout << result[sumCount] << endl;
+        sumCount++;
+      }
+      return count;
+    }
+  } else {  //输出到文件的情况
+    ofstream outFile;
+    outFile.open("solution.txt", ios::out);  //输出到solution文件当中
+    if (paraM == 1) {
+      count = 0;
+      sumCount = 0;
+      while (result[sumCount][0] != '\0') {
+        sumCount++;
+        count++;
+      }
+      if (sumCount > 20000) {
+        cout << "the number of words in the wordlist is too big, over 20000"
+             << endl;
+        outFile.close();
+        return count;
+      } else {
+        sumCount = 0;
+        while (sumCount < count) {
+          outFile << result[sumCount] << endl;
+          sumCount++;
+        }
+        outFile.close();  //关闭对象与文件间的关联
+        return count;
+      }
+    } else if (paraW == 1) {  //与上一个一样判断
+      count = 0;
+      sumCount = 0;
+      while (result[sumCount][0] != '\0') {
+        sumCount++;
+        count++;
+      }
+      if (sumCount > 20000) {
+        cout << "the number of words in the wordlist is too big, over 20000"
+             << endl;
+        outFile.close();
+        return count;
+      } else {
+        sumCount = 0;
+        while (sumCount < count) {
+          outFile << result[sumCount] << endl;
+          sumCount++;
+        }
+        outFile.close();  //关闭对象与文件间的关联
+        return count;
+      }
+    } else if (paraC == 1) {  // count记录字母数量
+      count = 0;
+      sumCount = 0;
+      i = 0;
+      while (result[sumCount][0] != '\0') {
+        i = 0;
+        while (result[sumCount][i] != '\0') {
+          i++;
+          count++;
+        }
+        sumCount++;
+      }
+      if (sumCount > 20000) {
+        cout << "the number of words in the wordlist is too big, over 20000"
+             << endl;
+        outFile.close();
+        return count;
+      } else {
+        i = 0;
+        while (i < sumCount) {
+          outFile << result[i] << endl;
+          i++;
+        }
+        outFile.close();  //关闭对象与文件间的关联
+        return count;
+      }
+    } else {
+      cout << "error in output!" << endl;
+      return -1;
+    }
+  }
+}
+
 char to_lower(char c) {
   return tolower(c);
 }
 
 char to_upper(char c) {
   return toupper(c);
-}
-vector<string> getWords(string line) {
-  vector<string> wordsList;
-  int pos = 0;
-  string word = "";
-  while (pos < line.length()) {   //这里length和size应该都可
-    word = "";                    //重置word
-    if (isalpha(line.at(pos))) {  //这里line[pos]和line.at(pos)应该等价
-      while (isalpha(line.at(pos))) {
-        word += line.at(pos);
-        pos++;
-        if (pos < line.length())  //判断是否越界，避免报错
-          continue;
-        else
-          break;
-      }
-      wordsList.push_back(word);
-    } else {
-      pos++;
-    }
-  }
-  return wordsList;
-}
-
-vector<string> paraW(vector<string>& output) {  //输出一个包含单词最多的单词链
-  string tmp = "";
-  int count1 = 0;  //记录单词数量
-  int count2 = 0;  //记录单词数量
-  int i = 0;
-  int j = 0;
-  if (output.size() < 0) {  //防止output为空
-    cout << "there is no wordList!" << endl;
-    return getWords(tmp);
-  }
-  while (i < output.size()) {
-    count2 = 0;
-    j = 0;
-    while (j < output[i].length()) {
-      if (isalpha(output[i].at(j))) {  //[]和at()一致
-        while (isalpha(output[i].at(j))) {
-          j++;
-          if (j < output[i].length())  //判断是否越界，避免报错
-            continue;
-          else
-            break;
-        }
-        count2++;
-      } else {
-        j++;
-      }
-    }
-    if (count2 > count1) {
-      count1 = count2;
-      tmp = output[i];
-    }
-    i++;
-  }
-  return getWords(tmp);
-}
-
-vector<string> paraM(
-    vector<string>& output) {  //计算首字母不相同的含最多单词的单词链
-  string tmp = "";
-  int mark[26] = {0};  //标记首字母是否出现过
-  int strMark = 0;     //标记该单词链是否满足要求
-  int count1 = 0;      //记录单词数量
-  int count2 = 0;      //记录单词数量
-  int i = 0;
-  int j = 0;
-  if (output.size() <= 0) {  //防止output为空
-    cout << "there is no wordList!" << endl;
-    return getWords(tmp);
-  }
-  while (i < output.size()) {
-    count2 = 0;
-    strMark = 0;                //重置strMark
-    for (j = 0; j < 26; j++) {  //重置mark
-      mark[j] = 0;
-    }
-    j = 0;
-    while (j < output[i].length()) {
-      if (isalpha(output[i].at(j))) {  //[]和at()一致
-        if (mark[output[i].at(j) - 'a'] == 1) {
-          strMark = 1;
-          break;
-        } else {
-          mark[output[i].at(j) - 'a'] = 1;
-        }
-        while (isalpha(output[i].at(j))) {
-          j++;
-          if (j < output[i].length())  //判断是否越界，避免报错
-            continue;
-          else
-            break;
-        }
-        count2++;
-      } else {
-        j++;
-      }
-    }
-    if (count2 > count1 && strMark == 0) {
-      count1 = count2;
-      tmp = output[i];
-    }
-    i++;
-  }
-  return getWords(tmp);
-}
-
-vector<string> paraC(vector<string>& output) {  //输出单词字母数量最多的单词链
-  string tmp = "";
-  int count1 = 0;  //记录字母数量
-  int count2 = 0;  //记录字母数量
-  int i = 0;
-  int j = 0;
-  if (output.size() < 0) {  //防止output为空
-    cout << "there is no wordList!" << endl;
-    return getWords(tmp);
-  }
-  while (i < output.size()) {
-    count2 = 0;
-    j = 0;
-    while (j < output[i].length()) {
-      if (isalpha(output[i].at(j))) {  //[]和at()一致
-        j++;
-        count2++;
-      } else {
-        j++;
-      }
-    }
-    if (count2 > count1) {
-      count1 = count2;
-      tmp = output[i];
-    }
-    i++;
-  }
-  return getWords(tmp);
 }
 int findPos(string word, vector<string>& a, int begin, int end) {    //用二分法查找位置，开始查找位置，结束查找位置
   if (begin == end) {
@@ -228,16 +197,34 @@ void countWordList(vector<string>& list, string word,
 }
 
 int main(int argc, char* argv[]) {
+  HMODULE module = LoadLibrary("D:\\CppProject\\WordList\\bin\\core.dll");
+  if (module == NULL) {
+    printf("load core.dll failed\n");
+    return 1;
+  }
+  typedef int (*chain_word)(char*[], int, char*[], char, char, bool);
+  typedef int (*chain_all)(char*[], int, char*[]);
+  typedef int (*chain_word_unique)(char*[], int, char*[]);
+  typedef int (*chain_char)(char*[], int, char*[], char, char, bool);
+  chain_word gen_chain_word;
+  chain_all gen_chains_all;
+  chain_word_unique gen_chain_word_unique;
+  chain_char gen_chain_char;
+  gen_chain_word = (chain_word)GetProcAddress(module, "gen_chain_word");
+  gen_chains_all = (chain_all)GetProcAddress(module, "gen_chains_all");
+  gen_chain_word_unique = (chain_word_unique)GetProcAddress(module, "gen_chain_word_unique");
+  gen_chain_char = (chain_char)GetProcAddress(module, "gen_chain_char");
+                         
   fstream inFile;
   string fileName = "";  //打开文件名
-  for (int i = 0; i < argc; i++) {
+  for (int i = 1; i < argc; i++) {
     string str = argv[i];
     if (str == "-n") {
       if (para_n == 1) {
         cout << "Duplicate Parameter Error!" << endl;
         return 1;
       }
-      para_n = 1; 
+      para_n = 1;
     } else if (str == "-w") {
       if (para_w == 1) {
         cout << "Duplicate Parameter Error!" << endl;
@@ -310,6 +297,7 @@ int main(int argc, char* argv[]) {
         }
         fileName = str;
       } else {
+        cout << str << endl;
         cout << "Unrecognizable Information Error!" << endl;
         return 1;
       }
@@ -357,102 +345,77 @@ int main(int argc, char* argv[]) {
           // cout << "a letter can't be a word!" << endl;
           continue;
         }
-        
+
         transform(word.begin(), word.end(), word.begin(), to_lower);  //变成小写
-        //cout << word << "------------" << endl;
+        // cout << word << "------------" << endl;
         if (lowWordsList.size() == 0) {
           lowWordsList.push_back(word);
           continue;
         }
         int index = findPos(word, lowWordsList, 0, lowWordsList.size() - 1);
-        //cout << index << "\n" << endl;
+        // cout << index << "\n" << endl;
         if (index < 0) {
           continue;
-        }
-        else if (index >= lowWordsList.size()) {
+        } else if (index >= lowWordsList.size()) {
           lowWordsList.push_back(word);  //小写字母，直接加到最后
+        } else {
+          lowWordsList.insert(lowWordsList.begin() + index,
+                              word);  //小写字母，插入
         }
-        else {
-          lowWordsList.insert(lowWordsList.begin() + index, word);  //小写字母，插入
-        }
-      } else {                         //不论是否是字母，都得pos++
+      } else {  //不论是否是字母，都得pos++
         pos++;
       }
     }
   }
   inFile.close();
-  pos = 0;
-  vector<vector<string>> ordered;//26个vector用于存放不同字母开头的单词
-  for (int i = 0; i < 26; i++) {
-    vector<string> tmp;
-    ordered.push_back(tmp);
+  char* words[20000]{};
+  int i = 0;
+  while (i < lowWordsList.size()) {
+    words[i] = (char*)malloc(sizeof(char) * 50);
+    i++;
   }
-  while (pos < lowWordsList.size()) {
-    ordered[lowWordsList[pos].front() - 'a'].push_back(lowWordsList[pos]);
-    pos++;
-  }
-  vector<string> output; //用于输出所有不含环单词链
-  int sum = 0;
-  for (int i = 0; i < lowWordsList.size(); i++) { //分割最长单词链
-    vector<string> list;
-    list.push_back(lowWordsList[i]);
-    countWordList(list, lowWordsList[i], ordered);
-    if (ring_warn == 1) {
-      cout << "Contains Words Ring!" << endl; 
-      return 1;
-    }
-    if (list.size() >= 2) {
-      if (para_h == 1 && list[0].front() == h_sub.at(0)) {
-        continue;
+  i = 0;
+  while (i < lowWordsList.size()) {
+    int j = 0;
+    if (words[i]) {
+      while (j < lowWordsList[i].length()) {
+        words[i][j] = lowWordsList[i].at(j);
+        j++;
       }
-      string str = list[0] + " ";
-      for (int j = 1; j < list.size(); j++) {
-        str = str + list[j] + " ";
-        if (j == list.size() - 1 && para_t == 1 &&
-            list[j].back() == t_sub.at(0)) {
-          continue;
-        }
-        if (!contains(output, str)) {
-          output.push_back(str);
-        }
-        sum++;
-      }
+      words[i][j] = '\0';
     }
+    i++;
   }
-  if (para_n == 1) {
-    cout << sum << endl;
-    for (int j = 0; j < output.size(); j++) {
-      output[j].erase(output[j].end() - 1);
-      cout << output[j] << endl;
-    }
-    return 0;
+  char* result[20000]{};
+  i = 0;
+  char head = '0';
+  char tail = '0';
+  bool enable_loop = false;
+  if (para_r == 1) {
+    enable_loop = true;
   }
-  if (para_m == 1) {
-    vector<string> out = paraM(output);
-    ofstream outFile("solution.txt");
-    for (int j = 0; j < out.size(); j++) {
-      outFile << out[j] << endl;
-    }
-    outFile.close();
-    return 0;
+  if (para_h == 1) {
+    head = h_sub.at(0);
+  }
+  if (para_t == 1) {
+    head = t_sub.at(0);
   }
   if (para_w == 1) {
-    vector<string> out = paraW(output);
-    ofstream outFile("solution.txt");
-    for (int j = 0; j < out.size(); j++) {
-      outFile << out[j] << endl;
-    }
-    outFile.close();
-    return 0;
+    int sum = gen_chain_word(words, lowWordsList.size(), result, head, tail,
+                             enable_loop);
+  } else if (para_n == 1) {
+    int sum = gen_chains_all(words, lowWordsList.size(), result);
+  } else if (para_m == 1) {
+    int sum = gen_chain_word_unique(words, lowWordsList.size(), result);
+  } else if (para_c == 1) {
+    int sum = gen_chain_char(words, lowWordsList.size(), result, head, tail,
+                             enable_loop);
   }
-  if (para_c == 1) {
-    vector<string> out = paraC(output);
-    ofstream outFile("solution.txt");
-    for (int j = 0; j < out.size(); j++) {
-      outFile << out[j] << endl;
-    }
-    outFile.close();
-    return 0;
+  output(result, para_n, para_m, para_w, para_c);
+  for (int i = 0; i < 20000; i++) {
+    free(words[i]);
+    free(result[i]);
+    i++;
   }
   return 0;
 }
