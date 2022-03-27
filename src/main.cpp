@@ -398,7 +398,7 @@ int main(int argc, char* argv[]) {
     head = h_sub.at(0);
   }
   if (para_t == 1) {
-    head = t_sub.at(0);
+    tail = t_sub.at(0);
   }
   if (para_w == 1) {
     int sum = gen_chain_word(words, lowWordsList.size(), result, head, tail,
