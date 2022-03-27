@@ -2,7 +2,9 @@
 ## user help
 **使用说明**
 本程序用C++实现了简易的单词链识别功能，通过在命令行输入对应指令来使用本程序。
+
 新建C++工程添加src目录下的main.cpp文件，将bin文件夹下core.dll包括进项目即可使用。
+
 指令格式为：程序名 参数 输入文件名（参数和文件名的顺序可以随意）
 例：
 > Wordlist.exe -n absolute_path_of_word_list
