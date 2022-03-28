@@ -388,8 +388,8 @@ int main(int argc, char* argv[]) {
   }
   char* result[20000]{};
   i = 0;
-  char head = '0';
-  char tail = '0';
+  char head = 0;
+  char tail = 0;
   bool enable_loop = false;
   if (para_r == 1) {
     enable_loop = true;
