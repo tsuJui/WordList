@@ -368,7 +368,7 @@ int main(int argc, char* argv[]) {
     }
   }
   inFile.close();
-  char* words[20000]{};
+  char* words[20010]{};
   int i = 0;
   while (i < lowWordsList.size()) {
     words[i] = (char*)malloc(sizeof(char) * 50);
@@ -386,7 +386,7 @@ int main(int argc, char* argv[]) {
     }
     i++;
   }
-  char* result[20000]{};
+  char* result[20010]{};
   i = 0;
   char head = 0;
   char tail = 0;
@@ -412,7 +412,7 @@ int main(int argc, char* argv[]) {
                              enable_loop);
   }
   output(result, para_n, para_m, para_w, para_c);
-  for (int i = 0; i < 20000; i++) {
+  for (int i = 0; i < 20010; i++) {
     free(words[i]);
     free(result[i]);
     i++;
