@@ -251,11 +251,11 @@ int main(int argc, char* argv[]) {
       if (i < argc - 1) {
         h_sub = argv[++i];
       } else {
-        cout << "Haed Letter Wrong!" << endl;
+        cout << "Head Letter Wrong!" << endl;
         return 1;
       }
       if (h_sub.length() > 1) {
-        cout << "Haed Letter Too Long!" << endl;
+        cout << "Head Letter Too Long!" << endl;
         return 1;
       }
       if (h_sub.at(0) < 'a' || h_sub.at(0) > 'z') {
