@@ -318,6 +318,10 @@ int main(int argc, char* argv[]) {
     cout << "Conflict Parameters Error!" << endl;
     return 1;
   }
+  if (para_n == 1 && para_h + para_t + para_r > 1) {
+    cout << "Conflict Parameters Error!" << endl;
+    return 1;
+  }
   inFile.open(fileName, ios::in);
   if (!inFile.is_open()) {  //判断文件是否成功打开
     cout << "Can't find the file!" << endl;
