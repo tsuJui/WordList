@@ -39,3 +39,4 @@
 |Conflict Parameters Error!|输出类型参数多于一个|
 |Can't find the file!|无法打开文件，请检查该文件是否存在或者格式是否正确|
 |Contains Words Ring!|文本内含有单词环|
+|the number of words in the wordlist is too big, over 20000|字符数组长度超过20000|
