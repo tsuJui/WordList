@@ -28,8 +28,8 @@
 |错误信息|错误说明|
 |----|----|
 |Duplicate Parameter Error!| 参数重复|
-|Haed Letter Too Long!|h参数指定的字母超过一个|      
-|Haed Letter Wrong!|h参数指定的字母不存在或者不是小写字母|
+|Head Letter Too Long!|h参数指定的字母超过一个|      
+|Head Letter Wrong!|h参数指定的字母不存在或者不是小写字母|
 |Tail Letter Too Long!|t参数指定的字母超过一个|      
 |Tail Letter Wrong!|t参数指定的字母不存在或者不是小写字母|
 |Unrecognizable Information Error!|输入了非参数非文件名信息|
