@@ -197,7 +197,7 @@ void countWordList(vector<string>& list, string word,
 }
 
 int main(int argc, char* argv[]) {
-  HMODULE module = LoadLibrary("D:\\CppProject\\WordList\\bin\\core.dll");
+  HMODULE module = LoadLibrary("core.dll");
   if (module == NULL) {
     printf("load core.dll failed\n");
     return 1;
