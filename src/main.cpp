@@ -259,7 +259,7 @@ int main(int argc, char* argv[]) {
         return 1;
       }
       if (h_sub.at(0) < 'a' || h_sub.at(0) > 'z') {
-        cout << "Haed Letter Wrong!" << endl;
+        cout << "Head Letter Wrong!" << endl;
         return 1;
       }
       para_h = 1;
