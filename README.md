@@ -1,9 +1,12 @@
 # WordList
 ## user help
-**使用说明**
-本程序用C++实现了简易的单词链识别功能，通过在命令行输入对应指令来使用本程序。
+**文件目录简介**
+bin目录下core.dll为计算模块，UnitTest1.cpp单元测试内容，WordList.exe为本项目可执行程序
 
-新建C++工程添加src目录下的main.cpp文件，将bin文件夹下core.dll包括进项目，然后修改main.cpp中的main函数LoadLibrary的参数为core.dll位置的绝对路径即可使用。
+src目录下main.cpp为输入输出，调用dll等内容的实现。
+
+**使用说明**
+本程序用C++实现了简易的单词链识别功能。下载以后将WordList.exe和core.dll放到同一文件目录下，通过在命令行输入对应指令来使用本程序。
 
 指令格式为：程序名 参数 输入文件名（参数和文件名的顺序可以随意）
 例：
@@ -40,3 +43,4 @@
 |Can't find the file!|无法打开文件，请检查该文件是否存在或者格式是否正确|
 |Contains Words Ring!|文本内含有单词环|
 |the number of words in the wordlist is too big, over 20000|字符数组长度超过20000|
+|load core.dll failed|找不到core.dll，请检查是否位于同一目录下|
