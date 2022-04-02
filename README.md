@@ -21,9 +21,9 @@ src目录下main.cpp为输入输出，调用dll等内容的实现。
 
 -c 计算字母最多的单词链，并输出
 
--h x 指定单词链首字母（x为任意小写字母）
+-h x 指定单词链首字母
 
--t x 指定单词链尾字母（x为任意小写字母）
+-t x 指定单词链尾字母
 
 -r 允许单词链中存在单词环
 
@@ -32,9 +32,9 @@ src目录下main.cpp为输入输出，调用dll等内容的实现。
 |----|----|
 |Duplicate Parameter Error!| 参数重复|
 |Head Letter Too Long!|h参数指定的字母超过一个|      
-|Head Letter Wrong!|h参数指定的字母不存在或者不是小写字母|
+|Head Letter Wrong!|h参数指定的不是字母|
 |Tail Letter Too Long!|t参数指定的字母超过一个|      
-|Tail Letter Wrong!|t参数指定的字母不存在或者不是小写字母|
+|Tail Letter Wrong!|t参数指定的不是字母|
 |Unrecognizable Information Error!|输入了非参数非文件名信息|
 |Multiple Files Error!|输入了多个文件名|
 |No File Error!|未输入文件名|
