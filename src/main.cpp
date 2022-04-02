@@ -400,9 +400,11 @@ int main(int argc, char* argv[]) {
   }
   if (para_h == 1) {
     head = h_sub.at(0);
+    head = tolower(head);
   }
   if (para_t == 1) {
     tail = t_sub.at(0);
+    tail = tolower(tail);
   }
   if (para_w == 1) {
     int sum = gen_chain_word(words, lowWordsList.size(), result, head, tail,
