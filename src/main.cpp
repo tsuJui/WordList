@@ -258,7 +258,8 @@ int main(int argc, char* argv[]) {
         cout << "Head Letter Too Long!" << endl;
         return 1;
       }
-      if (h_sub.at(0) < 'a' || h_sub.at(0) > 'z') {
+      if (!((h_sub.at(0) >= 'a' && h_sub.at(0) <= 'z') ||
+            (h_sub.at(0) >= 'A' && h_sub.at(0) <= 'Z'))) {
         cout << "Head Letter Wrong!" << endl;
         return 1;
       }
@@ -278,7 +279,8 @@ int main(int argc, char* argv[]) {
         cout << "Tail Letter Too Long!" << endl;
         return 1;
       }
-      if (t_sub.at(0) < 'a' || t_sub.at(0) > 'z') {
+      if (!((t_sub.at(0) >= 'a' && t_sub.at(0) <= 'z') ||
+            (t_sub.at(0) >= 'A' && t_sub.at(0) <= 'Z'))) {
         cout << "Tail Letter Wrong!" << endl;
         return 1;
       }
